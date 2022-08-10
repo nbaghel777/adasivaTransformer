@@ -133,6 +133,10 @@ class DTransformerEncoder(nn.Module):
             x = block(x)
         return x
 
+def prepatch(img,dpatch_size):
+    img_patches = F.unfold(img, kernel_size=dpatch_size,stride=dpatch_size)
+    img_patches = img_patches.permute(0,2,1)
+    return img_patches
     
 class Discriminator(nn.Module):
     def __init__(self,
