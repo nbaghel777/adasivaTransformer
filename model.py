@@ -146,7 +146,8 @@ class Discriminator(nn.Module):
         dropout = 0
     ):
         super(Discriminator, self).__init__()
-        self.patch_size = patch_size + 2 * extend_size
+        #self.patch_size = patch_size + 2 * extend_size
+        self.patch_size = patch_size 
         self.token_dim = in_channels * (self.patch_size ** 2)
         self.project_patches = nn.Linear(self.token_dim, dim)
 
@@ -161,10 +162,11 @@ class Discriminator(nn.Module):
         self.Transformer_Encoder = DTransformerEncoder(dim, blocks, num_heads, dim_head, dropout)
 
     def forward(self, img):
+        img_patches=prepatch(img,self.patch_size)
         # Generate overlappimg image patches
-        stride_h = (img.shape[2] - self.patch_size) // 8 + 1
-        stride_w = (img.shape[3] - self.patch_size) // 8 + 1
-        img_patches = img.unfold(2, self.patch_size, stride_h).unfold(3, self.patch_size, stride_w)
+        #stride_h = (img.shape[2] - self.patch_size) // 8 + 1
+        #stride_w = (img.shape[3] - self.patch_size) // 8 + 1
+        #img_patches = img.unfold(2, self.patch_size, stride_h).unfold(3, self.patch_size, stride_w)
         #print(img_patches.shape,'q1')
         img_patches = img_patches.contiguous().view(
             img_patches.shape[0], img_patches.shape[2] * img_patches.shape[3], img_patches.shape[1] * img_patches.shape[4] * img_patches.shape[5]
